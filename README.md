@@ -19,8 +19,6 @@ M−>         End of buffer
 C−g         Quit current operation
 
 
-Keystrokes  Function           Description
-
 C−x C−s     save−buffer        Save the current buffer to disk
 C−x u       undo               Undo the last operation
 C−x C−f     find−file          Open a file from disk
@@ -37,4 +35,4 @@ C−h F       view−emacs−FAQ     Display the Emacs FAQ
 C−h i       info               Read the Emacs documentation
 C−x r m     bookmark−set       Set a bookmark. Useful in searches
 C−x r b     bookmark−jump      Jump to a bookmark.
-−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+
