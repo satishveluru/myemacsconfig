@@ -3,7 +3,7 @@
 This is basic emacs configurations.
 
 Keystrokes  Action
-−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+
 C−p         Up one line
 C−n         Down one line
 C−f         Forward one character
@@ -17,10 +17,10 @@ M−b         Backward one word
 M−<         Beginning of buffer
 M−>         End of buffer
 C−g         Quit current operation
-−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+
 
 Keystrokes  Function           Description
-−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+
 C−x C−s     save−buffer        Save the current buffer to disk
 C−x u       undo               Undo the last operation
 C−x C−f     find−file          Open a file from disk
