@@ -29,20 +29,6 @@
 		("https"    . "localhost:3128")
 		))
 
-;;; (setq url-http-proxy-basic-auth-storage
-;;;     (list (list "localhost:3128"
-;;;             (cons "Input your LDAP UID !"
-;;;                   (base64-encode-string "jhalliley:passwd")))))
-;;; 
-;;; (setq url-http-proxy-digest-auth-storage
-;;;     (list (list "localhost:3128"
-;;;             (cons "Input your LDAP UID !"
-;;;                   (base64-encode-string "jhalliley:passwd")))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; NOTE: Need to run cntlm in order for Emacs package management to work properly at CAC
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;=======================================================
 ; Package management
 ;=======================================================
