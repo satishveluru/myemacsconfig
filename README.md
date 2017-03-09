@@ -2,8 +2,6 @@
 
 This is basic emacs configurations.
 
-;;; short Cuts 
-
 Keystrokes  Action
 −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
 C−p         Up one line
