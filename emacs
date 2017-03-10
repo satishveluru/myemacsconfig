@@ -1,22 +1,16 @@
 ;========================================================================================
-;  This file must be named ".emacs" and live in your $HOME directory.
+;  This file must be named ".emacs" and place it in  your $HOME directory.
 ;========================================================================================
 
-;--------------------------------------------------------------------- 
-;  Locate our e-lisp...
-;---------------------------------------------------------------------
-(setenv "SITELISP_HOME" "~/site-lisp")
-(add-to-list 'load-path (getenv "SITELISP_HOME"))
-
-;============================================
-;  Load my functions...
-;============================================
-(load-library "~/.emacs-fncs.el")
 
 ;============================================
 ;  No GNU Emacs / welcome buffer
 ;============================================
 (setq inhibit-startup-screen t)
+
+(package-initialize)
+(package-refresh-contents)
+(require 'package)
 
 ;============================================
 ;  Set up Network Proxies, if needed...
@@ -40,7 +34,6 @@
 (add-to-list 'package-archives '("marmalade"     . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa"         . "https://melpa.org/packages/"))
 
-;;; (setq debug-on-error t)
-(package-initialize)
 (package-refresh-contents)
+
 
