@@ -36,3 +36,6 @@ C−h i       info               Read the Emacs documentation
 C−x r m     bookmark−set       Set a bookmark. Useful in searches
 C−x r b     bookmark−jump      Jump to a bookmark.
 
+
+// duplicate a line - c-a c-space c-n m-w c-y
+//duplicate a line - c-a c-k c-k c-y c-y 
