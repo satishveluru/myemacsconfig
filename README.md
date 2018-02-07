@@ -1,7 +1,7 @@
 #Installation and Steps to set up correctly
 
 1.Install Emacs
-2. Change the configuration : location should be 
+2. Change the configuration : location should be  ----> $home/.emacs file or .emacs.d
 3. re run the emcas to see updated changes.
 
 
