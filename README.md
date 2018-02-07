@@ -1,3 +1,10 @@
+#Installation and Steps to set up correctly
+
+1.Install Emacs
+2. Change the configuration : location should be 
+3. re run the emcas to see updated changes.
+
+
 # myemacsconfig
 
 This is basic emacs configurations.
