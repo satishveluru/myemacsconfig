@@ -1,3 +1,7 @@
+
+ Emacs looks for your init file using the filenames ~/.emacs, ~/.emacs.el, or ~/.emacs.d/init.el; 
+ you can choose to use any one of these three names (see Find Init). Here, ~/ stands for your home directory.
+
 ;---------------------------------------------------------------------
 ;  Locate our e-lisp...
 ;---------------------------------------------------------------------
