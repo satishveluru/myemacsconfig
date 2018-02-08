@@ -1,0 +1,22 @@
+;; when i downloaded theme package loaded those using home direcoty 
+;; and i used require packages to load
+
+;; Need to know how to set up home 
+;;Loaded those pacackage -- how ?
+;; put it $HOME//emacs.d/lisp folder and load it 
+
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
+
+(package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(require 'better-defaults)
+(require 'material-theme)
+
+;; hide the startup message
+(setq inhibit-startup-message t) 
+
+;; load material theme
+;;(load-theme 'material-theme t)
