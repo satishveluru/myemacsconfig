@@ -10,22 +10,6 @@
 (add-to-list 'load-path (getenv "SITELISP_HOME"))
 
 
-;-------------------------------------------------------
-;  Show date and time in mode line
-;-------------------------------------------------------
-
-(setq display-time-day-and-date t)
-(display-time)
-
-
-;============================================
-;  No welcome buffer Remove Menu toool bar and scroll bar
-;============================================
-(setq inhibit-startup-screen t)
-(menu-bar-mode -1)
-(toggle-scroll-bar -1)
-(tool-bar-mode -1)
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -241,5 +225,23 @@
 (add-to-list 'package-archives '("melpa"         . "https://melpa.org/packages/"))
 
 (package-refresh-contents)
+
+
+
+;-------------------------------------------------------
+;  Show date and time in mode line
+;-------------------------------------------------------
+
+(setq display-time-day-and-date t)
+(display-time)
+
+
+;============================================
+;  No welcome buffer Remove Menu toool bar and scroll bar
+;============================================
+(setq inhibit-startup-screen t)
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
 
 
