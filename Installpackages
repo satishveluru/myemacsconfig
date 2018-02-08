@@ -1,5 +1,5 @@
-;; when i downloaded theme package loaded those using home direcoty 
-;; and i used require packages to load
+;; when i downloaded theme package  from git /google ( which means .el files ) put those .el files in home direcoty 
+;; and i used "require keyword " packages to load
 
 ;; Need to know how to set up home 
 ;;Loaded those pacackage -- how ?
