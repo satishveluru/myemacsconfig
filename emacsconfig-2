@@ -1,0 +1,378 @@
+;========================================================================================
+;  This file must be named ".emacs" and live in your $HOME directory.
+;========================================================================================
+
+;---------------------------------------------------------------------
+;  Locate our e-lisp...
+;---------------------------------------------------------------------
+
+(setenv "SITELISP_HOME" "~/site-lisp")
+(add-to-list 'load-path (getenv "SITELISP_HOME"))
+
+;---------------------------------------------------------------------
+; shell  Command to run Bash. Usage: M-x run-bash
+;---------------------------------------------------------------------
+(defun cygwin-shell ()
+	"Run cygwin bash in shell mode."
+      (interactive)
+      (let ((explicit-shell-file-name "C:/cygwin64/bin/bash"))
+	(call-interactively 'shell)))
+
+
+;----------------------------------------------------------------------
+; Shell colors
+;----------------------------------------------------------------------
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+
+
+
+
+;---------------------------------------------------------------------
+; Environemnt Variables
+;---------------------------------------------------------------------
+;; example of setting env var named “path”, by appending a new path to existing path
+(setenv "PATH"
+  (concat
+   "C:/cygwin64/usr/local/bin" ";"
+   "C:/cygwin64/usr/bin" ";"
+   "C:/cygwin64/bin" ";"
+   (getenv "PATH")
+  ))
+
+
+
+;-------------------------------------------------------
+;  Show date and time in mode line
+;-------------------------------------------------------
+
+(setq display-time-day-and-date t)
+(display-time)
+
+
+;--------------------------------------------------------------
+
+;-------------------------------------------------------
+;  No welcome buffer Remove Menu toool bar and scroll bar
+;-------------------------------------------------------
+(setq inhibit-startup-screen t)
+(tool-bar-mode -1)
+
+
+;-------------------------------------------------------
+; Word Wrap
+;-------------------------------------------------------
+
+(setq word-wrap t)
+(setq org-startup-indented t)
+
+;-------------------------------------------------------
+;Delte Trailing whitspace ; M-SPC Just Once space ; M-\ delete Horizontal Space
+;--------------------------------------------------------
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-lines 'delete-trailing-lines)
+
+
+;-------------------------------------------------------
+; Auto Completion
+;-------------------------------------------------------
+
+
+;-------------------------------------------------------
+; Multi Scratch
+;-------------------------------------------------------
+(require 'multi-scratch)
+
+;(menu-bar-mode -1)
+;(toggle-scroll-bar -1)
+;(tool-bar-mode -1)
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+;-------------------------------------------------------
+; Proxy Setting
+;-------------------------------------------------------
+
+(setq url-proxy-services
+      '(
+		("www"      . "localhost:3128")
+		("http"     . "localhost:3128")
+		("https"    . "localhost:3128")
+		))
+
+
+
+
+;-------------------------------------------------------
+; Package management
+;-------------------------------------------------------
+(require 'package)
+
+;(setq package-archives nil)
+(setq package-enable-at-startupa nil)
+(add-to-list 'package-archives '("gnu"           . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable"  . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-milkbox" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives '("marmalade"     . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa"         . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("elpy" 	 . "https://jorgenschaefer.github.io/packages/"))
+
+(package-initialize)
+
+;; Bootstrap 'use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; Install Try Package
+(use-package try
+  :ensure t)
+
+;;Install which-key Package
+(use-package which-key
+  :ensure t)
+
+;; Refresh Packages
+(when (not package-archive-contents)
+    (package-refresh-contents))
+
+;-------------------------------------------------------
+;Custom Setting
+;-------------------------------------------------------
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   (quote
+    ("a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
+ '(package-selected-packages
+   (quote
+    (scratch auto-complete-auctex auto-compile php-scratch org-bullets flx ivy avy swiper counsel ssh jedi-direx pip-requirements multiple-cursors which-key try use-package flycheck find-file-in-repository autopair magit python-mode font-lock-profiler font-utils font-lock-studio font-lock+ jedi elpy auto-complete solarized-theme))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+;-------------------------------------------------------
+;  Shell mode
+;-------------------------------------------------------
+
+(require 'ansi-color)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+(defun my-shell-setup ()
+  (setq comint-scroll-show-maximum-output 'this)
+  (setq comint-completion-addsuffix       t)
+  (setq comint-eol-on-send                t)
+  (setq w32-quote-process-args            ?\")
+
+  (make-variable-buffer-local   'comint-completion-addsuffix)
+  (local-set-key '[up]          'comint-previous-input)
+  (local-set-key '[down]        'comint-next-input)
+  (local-set-key '[(shift tab)] 'comint-next-matching-input-from-input)
+)
+(setq shell-mode-hook 'my-shell-setup)
+(setq process-coding-system-alist (cons '("bash" . raw-text-unix)
+                                        process-coding-system-alist))
+
+;-------------------------------------------------------------------
+;; Cygwin Configurations changes
+;-------------------------------------------------------------------
+
+(require 'setup-cygwin)
+
+;; Sets your shell to use cygwin's bash, if Emacs finds it's running
+;; under Windows and c:\cygwin exists. Assumes that C:\cygwin\bin is
+;; not already in your Windows Path (it generally should not be).
+
+(let* ((cygwin-root "C:/cygwin64")
+         (cygwin-bin (concat cygwin-root "/bin")))
+    (when (and (eq 'windows-nt system-type)
+  	     (file-readable-p cygwin-root))
+
+    (setq exec-path (cons cygwin-bin exec-path))
+    (setenv "PATH" (concat cygwin-bin ";" (getenv "PATH")))
+
+;; By default use the Windows HOME.
+;; Otherwise, uncomment below to set a HOME
+;(setenv "HOME" (concat cygwin-root "C:/home/"))
+
+
+;; NT-emacs assumes a Windows shell. Change to bash.
+
+(setq shell-file-name "bash")
+(setenv "SHELL" shell-file-name)
+(setq explicit-shell-file-name shell-file-name)
+
+;(setq explicit-shell-file-name "C:/cygwin64/bin/bash.exe")
+
+
+ ;; This removes unsightly ^M characters that would otherwise
+ ;; appear in the output of java applications.
+ (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)))
+
+;---------------------------------------------------------------------
+;Utilities
+;---------------------------------------------------------------------
+
+(set-cursor-color     "orange")
+(set-mouse-color      "#bf3eff")
+(setq initial-scratch-message "")
+
+;; Remove whitespaces before saving file at end of each line.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; To move one screen to Other Using Shift arrow key command.
+(windmove-default-keybindings 'shift)
+
+;; To search files or directories it will be useful
+(ido-mode t)
+(setq ido-show-dot-for-dired t)
+(setq indo-enable-flex-matching t)
+(setq ido-everywhere t)
+
+;; To show Buffer list in meaningful way
+(defalias 'list-buffers 'ibuffer-other-window)
+
+;; Theme Setting.
+(require 'solarized-dark-theme)
+
+
+;---------------------------------------------------------------------
+;Multiple Cursor changes
+;---------------------------------------------------------------------
+
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+
+;; working with multiple cursor
+(require 'mc-edit-lines)
+(require 'mc-cycle-cursors)
+(require 'mc-mark-more)
+(require 'mc-mark-pop)
+(require 'rectangular-region-mode)
+(require 'mc-separate-operations)
+(require 'mc-hide-unmatched-lines-mode)
+
+(provide 'multiple-cursors)
+
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+
+;-------------------------------------------------------
+; Python Setting
+;-------------------------------------------------------
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
+;Enable elpy Packages
+(elpy-enable)
+
+(put 'upcase-region 'disabled nil)
+
+
+;--------------------------------------------------------------------
+; Avy/Counsel/Swiper - For search in buffer or file
+;--------------------------------------------------------------------
+
+(use-package counsel
+  :ensure t
+  )
+
+(use-package swiper
+:ensure try
+:config
+(progn
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "<f6>") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-load-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+))
+
+;; flx configuration fuzzy search
+
+;; (setq ivy-re-builders-alist
+;;       '((ivy-switch-buffer . ivy--regex-plus)
+;;         (t . ivy--regex-fuzzy)))
+
+
+;---------------------------------------------------------------------
+;  Re-map some keys
+;---------------------------------------------------------------------
+(global-set-key "\C-C%"     'replace-regexp-region)
+(global-set-key "\C-Ca"     'align-words-align)
+(global-set-key "\C-Cc"     'comment-region)
+(global-set-key "\C-Ce"     'eval-buffer)
+(global-set-key "\C-Cf"     'fixup-whitespace)
+(global-set-key "\C-Cg"     'grep-find)
+(global-set-key "\C-Ci"     'indent-region)
+(global-set-key "\C-Ck"     'kill-region)
+(global-set-key "\C-Cl"     'linum-mode)
+(global-set-key "\C-Co"     'find-file-at-point)
+(global-set-key "\C-Cq"     'c-fill-paragraph)
+(global-set-key "\C-Cr"     'revert-buffer)
+(global-set-key "\C-Cs"     'sort-lines)
+(global-set-key "\C-Cu"     'uncomment-region)
+(global-set-key "\C-C="     'align-equal-signs-region)
+(global-set-key "\C-Z"      'goto-line)
+(global-set-key "\C-c\C-l"  'downcase-letter)
+(global-set-key "\C-c\C-u"  'upcase-letter)
+(global-set-key (kbd "C-<backspace>") (lambda ()
+                                        (interactive)
+                                        (kill-line 0)
+                                        (indent-according-to-mode)))
+
+
+;------------------------------------------------------------------------
+; org-mode
+;------------------------------------------------------------------------
+
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
+;; Table Format
+
+;; Create a table with C-c |
+;; Row Header by placing the cursor on the first row and entering C-c -.
+;; Insert a line above the first (using M-S-down)
+;; A column can be shifted left and right using the M-left and M-right key combinations respectively.
+;;A column can be added (to the right) or deleted using the M-S-left and M-S-right key combinations respectively
+;; The column currently containing the cursor can be sorted using the C-c ^ key combination
+
+
+
+;;----------------- Search commands -------------------
+;; M-x rgrep → Run Frep via find ,search all files in current directory and sub-directory.
+;; M-x lgrep → Run Asynchronous , search only some files of current dir by using a text pattern (regex) on file names first.
+;; M-x grep-find → use a combination of unix's grep and find commands
+;; M-x find-dired -- list files in a directory with a particular property
+;; M-x (In dired) dired-do-search
+;; M-x zgrep -- Run Zgrep and collect ouput in grep
