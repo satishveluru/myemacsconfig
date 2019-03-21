@@ -109,7 +109,18 @@ After that, restart emacs, and when you type M-x compile, it should try to execu
 
 Power tip: you can jump straight to each compile error by running C-x `. Each time you do it, it will jump to the next error.
 
+Notes:
+*******
 
 
+Fifth, run M-x go-projectile-install-tools (one time only, although I think it would be harmless to put this in .emacs if you don't mind the extra startup time). From time to time you may need to run M-x go-projectile-update-tools.
 
+I'm still learning all the features of this setup, but the key ones to me are:
 
+    Automatic per-project GOPATH (I don't even set a global $GOPATH anymore)
+    go-projectile manages its own tools so they don't interact with your regular paths
+    projectile-test-project always runs from the repo root so you can use "make test" from any directory
+    I use godef-jump (M-.) all the time
+    Flycheck runs golint, go vet, and errcheck automatically. Note that it's missing some of the exceptions we maintain in our makefile, so it will report some false positives which you can ignore.
+    Oracle commands start with C-c C-o. For example, C-c C-o r finds references to the function/variable at point.
+    gorename is bound to C-c p w
