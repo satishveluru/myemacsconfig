@@ -1,0 +1,327 @@
+
+;-------------------------------------------------------
+;  Show date and time in mode line
+;-------------------------------------------------------
+
+(setq display-time-day-and-date t)
+(display-time)
+
+;-------------------------------------------------------
+;  No welcome buffer Remove Menu toool bar and scroll bar
+;-------------------------------------------------------
+(setq inhibit-startup-screen t)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+
+;-------------------------------------------------------
+; Word Wrap
+;-------------------------------------------------------
+
+(setq word-wrap t)
+(setq org-startup-indented t)
+
+;-------------------------------------------------------
+;Delte Trailing whitspace ; M-SPC Just Once space ; M-\ delete Horizontal Space
+;--------------------------------------------------------
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-lines 'delete-trailing-lines)
+
+;Cursor Color and mouse color
+(set-cursor-color     "orange")
+(set-mouse-color      "#bf3eff")
+(setq initial-scratch-message "")
+
+; To move one screen to Other Using Shift arrow key command.
+(windmove-default-keybindings 'shift)
+
+
+;------------------------------------------------------
+; To search files or directories it will be useful
+;-------------------------------------------------------
+;(ido-mode t)
+;(setq ido-show-dot-for-dired t)
+;(setq indo-enable-flex-matching t)
+;(setq ido-everywhere t)
+
+;Note: we are using HELM instead of ido -mode
+
+;To show Buffer list in meaningful way
+(defalias 'list-buffers 'ibuffer-other-window)
+
+
+;-------------------------------------------------------
+;(setenv "SITELISP_HOME" "/home/satish/.emacs.d/elpa/")
+;(add-to-list 'load-path (getenv "SITELISP_HOME"))
+;(add-to-list 'load-path "~/.emacs.d/elpa/")
+;--------------------------------------------------------
+
+
+;-------------------------------------------------------
+; Multi Scratch
+;-------------------------------------------------------
+;(require 'multi-scratch)
+
+
+;-------------------------------------------------------
+; Package management
+;-------------------------------------------------------
+(require 'package)
+
+;(setq package-enable-at-startup nil)
+
+(add-to-list 'package-archives '("gnu"           . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable"  . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-milkbox" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives '("marmalade"     . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa"         . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("elpy" 	 . "https://jorgenschaefer.github.io/packages/"))
+
+(package-initialize)
+
+(package-refresh-contents) ;should be after pkg initialize
+
+
+(add-to-list 'load-path "~/.emacs.d/elpa/")
+
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
+
+
+;; Bootstrap 'use-package' to install other package
+(unless (package-installed-p 'use-package)
+ (package-refresh-contents)
+(package-install 'use-package))
+
+;; Install Try Package
+;(use-package try
+;  :ensure t)
+
+;;Install which-key Package  navigating emacs usage -CTRL-x
+(use-package which-key
+  :ensure t
+  :config (which-key-mode))
+
+;; Refresh Packages
+;(when (not package-archive-contents)
+;(package-refresh-contents))
+
+
+;(require 'solarized-dark-theme)
+(require 'color-theme-sanityinc-tomorrow)
+
+;Avy Single go-tochar
+(use-package avy
+  :ensure t
+  :bind ("M-s" . avy-goto-char))
+
+;Window Management  CTRL-X o to go to other window
+(winner-mode 1)
+(windmove-default-keybindings)  ;; using shift key to move
+
+;Ace-Window CTRL-O to select preferred screen
+(use-package ace-window
+  :ensure t
+  :init
+  (progn
+    (global-set-key [remap other-window] 'ace-window)))
+
+;Counsel
+(use-package counsel
+  :ensure t
+)
+
+;;; Swiper configuration for instead of CRTL-S
+(use-package swiper
+	     :ensure t
+	     :config
+	     (progn
+
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+;; enable this if you want `swiper' to use it
+;; (setq search-default-mode #'char-fold-to-regexp)
+	(global-set-key "\C-s" 'swiper)
+	(global-set-key (kbd "C-c C-r") 'ivy-resume)
+	(global-set-key (kbd "<f6>") 'ivy-resume)
+	(global-set-key (kbd "M-x") 'counsel-M-x)
+	(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+	(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+	(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+	(global-set-key (kbd "<f1> l") 'counsel-find-library)
+	(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+	(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+	(global-set-key (kbd "C-c g") 'counsel-git)
+	(global-set-key (kbd "C-c j") 'counsel-git-grep)
+	(global-set-key (kbd "C-c k") 'counsel-ag)
+	(global-set-key (kbd "C-x l") 'counsel-locate)
+	(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+	(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+ ))
+
+
+;; Helm Set up
+
+(require 'helm-config)
+
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+(global-set-key (kbd "M-x") 'helm-M-x)
+
+(helm-mode 1)
+
+
+;--------------------------------------------------------------
+; Go Programming Setting
+;--------------------------------------------------------------
+
+(setenv "GOPATH" "/home/satish/codebase/gocode/")
+(add-to-list 'exec-path "/home/satish/codebase/gocode/bin")
+
+
+;;Custom hook
+
+(defun my-go-mode-hook ()
+	  ;use goimports instead of go-fmt
+	  (setq gofmt-command "goimports")
+
+	  ; Call Gofmt before saving
+	  (add-hook 'before-save-hook 'gofmt-before-save)
+
+	  ; eldoc shows the signature of the function at point in the status bar.
+	  (go-eldoc-setup)
+
+	   ;Autocomplete
+ 	 (auto-complete-mode 1)
+
+    	; Godef jump key binding
+	(local-set-key (kbd "M-.") 'godef-jump)
+	(local-set-key (kbd "M-*") 'pop-tag-mark)
+	(local-set-key (kbd "M-p") 'compile)            ; Invoke compiler
+	(local-set-key (kbd "M-P") 'recompile)          ; Redo most recent compile cmd
+	(local-set-key (kbd "M-[") 'previous-error)     ; Go to previous error or msg
+	(local-set-key (kbd "M-]") 'next-error)         ; Go to next error (or msg)
+
+; Customize compile command to run go build
+(if (not (string-match "go" compile-command))
+     (set (make-local-variable 'compile-command)
+          "go build -v && go test -v && go vet"))
+  let ((map go-mode-map))
+        (define-key map (kbd "C-c a") 'go-test-current-project) ;; current package, really
+        (define-key map (kbd "C-c m") 'go-test-current-file)
+        (define-key map (kbd "C-c .") 'go-test-current-test)
+        (define-key map (kbd "C-c b") 'go-run)
+
+  )
+
+;;Go hooks
+
+;(defun auto-complete-for-go ()
+;  (auto-complete-mode 1))
+
+
+;(add-hook 'go-mode-hook 'auto-complete-for-go)
+
+;(add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
+
+;First Install autocomplete(GNU) then go-autocmplete mode
+
+;; Connect go-mode-hook with the function we just defined
+
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+
+(with-eval-after-load 'go-mode
+   (require 'go-autocomplete))
+
+;C-c C-o d #for describe
+
+;------------------------------------------------------
+;Guru commands
+;------------------------------------------------------
+;    j jump to definition
+;    r referrers
+;    f free names (== if a selected block is turned into a function, what params are needed?)
+;    d describe expression (== show function params or type of identifier)
+;    i show implements (== what interfaces does this thing implement?)
+;    < show callers to a function
+;   > show callees to a function
+;    s show call stack (== possible paths from main())
+;    p show points-to
+;    e show which errors
+;    c show channel peers
+
+
+(require 'go-guru)
+(go-guru-hl-identifier-mode)
+
+
+; Use projectile-test-project in place of 'compile'; assign whatever key you want.
+;(global-set-key [f9] 'projectile-test-project)
+
+; "projectile" recognizes git repos (etc) as "projects" and changes settings
+; as you switch between them.
+;(projectile-global-mode 1)
+;(require 'go-projectile)
+;(go-projectile-tools-add-path)
+;(setq gofmt-command (concat go-projectile-tools-path "/bin/goimports"))
+
+
+;(defun auto-complete-for-go ()
+;  (auto-complete-mode 1))
+;(add-hook 'go-mode-hook 'auto-complete-for-go)
+
+;(require 'go-autocomplete)
+;(require 'auto-complete-config)
+;(ac-config-default)
+
+; "company" is auto-completion
+;(require 'company)
+;(require 'go-mode)
+;(require 'company-go)
+;(add-hook 'go-mode-hook (lambda ()
+;                          (company-mode)
+;                          (set (make-local-variable 'company-backends) '(company-go))))
+
+
+; gotest defines a better set of error regexps for go tests, but it only
+; enables them when using its own functions. Add them globally for use in
+;(require 'compile)
+;(require 'gotest)
+;(dolist (elt go-test-compilation-error-regexp-alist-alist)
+;  (add-to-list 'compilation-error-regexp-alist-alist elt))
+;(defun prepend-go-compilation-regexps ()
+;  (dolist (elt (reverse go-test-compilation-error-regexp-alist))
+;    (add-to-list 'compilation-error-regexp-alist elt t)))
+;(add-hook 'go-mode-hook 'prepend-go-compilation-regexps)
+
+
+
+
+;(defun set-exec-path-from-shell-PATH ()
+;  (let ((path-from-shell (replace-regexp-in-string
+;                          "[ \t\n]*$"
+;                          ""
+;                          (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+;    (setenv "PATH" path-from-shell)
+;    (setq eshell-path-env path-from-shell) ; for eshell users
+;    (setq exec-path (split-string path-from-shell path-separator))))
+;
+;(when window-system (set-exec-path-from-shell-PATH))
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (helm color-theme-sanityinc-tomorrow solarized-theme godoctor ace-window go-errcheck go-eldoc flymake-go go-autocomplete auto-complete exec-path-from-shell go-mode which-key use-package try))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
