@@ -67,7 +67,7 @@
 (setq org-startup-indented t)
 
 ;-------------------------------------------------------
-;Delte Trailing whitspace ; M-SPC Just Once space ; M-\ delete Horizontal Space
+; Delete Trailing whitspace ; M-SPC Just Once space ; M-\ delete Horizontal Space
 ;--------------------------------------------------------
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'before-save-lines 'delete-trailing-lines)
