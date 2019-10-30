@@ -77,6 +77,19 @@
 ; Auto Completion
 ;-------------------------------------------------------
 
+;-------------------------------------------------------
+; Create Empty Bufffer 
+;-------------------------------------------------------
+
+(defun create-new-buffer ()
+  (interactive)
+  (let (($buf (generate-new-buffer "untitled")))
+    (switch-to-buffer $buf)
+    (funcall initial-major-mode)
+    (setq buffer-offer-save t)))
+
+(global-set-key (kbd "C-c n") #'create-new-buffer)	
+
 
 ;-------------------------------------------------------
 ; Multi Scratch
