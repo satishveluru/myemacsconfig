@@ -94,6 +94,56 @@
 
 (global-set-key (kbd "C-c n") #'create-new-buffer)	
 
+;---------------------------------------------------------------------
+;;Utilities
+;---------------------------------------------------------------------
+
+(set-cursor-color     "orange")
+(set-mouse-color      "#bf3eff")
+(setq initial-scratch-message "")
+
+;---------------------------------------------------------------------
+;; Remove whitespaces before saving file at end of each line.
+;---------------------------------------------------------------------
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;---------------------------------------------------------------------
+;; To move one screen to Other Using Shift arrow key command.
+;---------------------------------------------------------------------
+(windmove-default-keybindings 'shift)
+
+;---------------------------------------------------------------------
+;; To show Buffer list in meaningful way
+;---------------------------------------------------------------------
+(defalias 'list-buffers 'ibuffer-other-window)
+
+;---------------------------------------------------------------------
+;; Theme Setting.
+;---------------------------------------------------------------------
+(require 'solarized-dark-theme)
+
+
+;---------------------------------------------------------------------
+;Multiple Cursor changes
+;---------------------------------------------------------------------
+
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+
+;; working with multiple cursor
+(require 'mc-edit-lines)
+(require 'mc-cycle-cursors)
+(require 'mc-mark-more)
+(require 'mc-mark-pop)
+(require 'rectangular-region-mode)
+(require 'mc-separate-operations)
+(require 'mc-hide-unmatched-lines-mode)
+
+(provide 'multiple-cursors)
+
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
 ;-------------------------------------------------------
 ; Multi Scratch
 ;-------------------------------------------------------
@@ -213,184 +263,50 @@
 ;; (use-package magit
 ;;   :bind ("C-c m" . magit-status))
 
-
-
-;-------------------------------------------------------
-;Custom Setting
-;-------------------------------------------------------
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(custom-enabled-themes nil)
- '(custom-safe-themes
-   (quote
-    ("a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
- '(package-selected-packages
-   (quote
-    (scratch auto-complete-auctex auto-compile php-scratch org-bullets flx ivy avy swiper counsel ssh jedi-direx pip-requirements multiple-cursors which-key try use-package flycheck find-file-in-repository autopair magit python-mode font-lock-profiler font-utils font-lock-studio font-lock+ jedi elpy auto-complete solarized-theme))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
+;; (use-package git-messenger
+;;   :bind ("C-c M" . git-messenger:popup-message)
+;;   :config
+;;   (setq git-messenger:show-detail t
+;;         git-messenger:use-magit-popup t))
 
 ;-------------------------------------------------------
-;  Shell mode
+;; completion
 ;-------------------------------------------------------
 
-(require 'ansi-color)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-(defun my-shell-setup ()
-  (setq comint-scroll-show-maximum-output 'this)
-  (setq comint-completion-addsuffix       t)
-  (setq comint-eol-on-send                t)
-  (setq w32-quote-process-args            ?\")
-
-  (make-variable-buffer-local   'comint-completion-addsuffix)
-  (local-set-key '[up]          'comint-previous-input)
-  (local-set-key '[down]        'comint-next-input)
-  (local-set-key '[(shift tab)] 'comint-next-matching-input-from-input)
-)
-(setq shell-mode-hook 'my-shell-setup)
-(setq process-coding-system-alist (cons '("bash" . raw-text-unix)
-                                        process-coding-system-alist))
-
-;-------------------------------------------------------------------
-;; Cygwin Configurations changes
-;-------------------------------------------------------------------
-
-(require 'setup-cygwin)
-
-;; Sets your shell to use cygwin's bash, if Emacs finds it's running
-;; under Windows and c:\cygwin exists. Assumes that C:\cygwin\bin is
-;; not already in your Windows Path (it generally should not be).
-
-(let* ((cygwin-root "C:/cygwin64")
-         (cygwin-bin (concat cygwin-root "/bin")))
-    (when (and (eq 'windows-nt system-type)
-  	     (file-readable-p cygwin-root))
-
-    (setq exec-path (cons cygwin-bin exec-path))
-    (setenv "PATH" (concat cygwin-bin ";" (getenv "PATH")))
-
-;; By default use the Windows HOME.
-;; Otherwise, uncomment below to set a HOME
-;(setenv "HOME" (concat cygwin-root "C:/home/"))
-
-
-;; NT-emacs assumes a Windows shell. Change to bash.
-
-(setq shell-file-name "bash")
-(setenv "SHELL" shell-file-name)
-(setq explicit-shell-file-name shell-file-name)
-
-;(setq explicit-shell-file-name "C:/cygwin64/bin/bash.exe")
-
-
- ;; This removes unsightly ^M characters that would otherwise
- ;; appear in the output of java applications.
- (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)))
-
-;---------------------------------------------------------------------
-;Utilities
-;---------------------------------------------------------------------
-
-(set-cursor-color     "orange")
-(set-mouse-color      "#bf3eff")
-(setq initial-scratch-message "")
-
-;; Remove whitespaces before saving file at end of each line.
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; To move one screen to Other Using Shift arrow key command.
-(windmove-default-keybindings 'shift)
-
-;; To search files or directories it will be useful
-(ido-mode t)
-(setq ido-show-dot-for-dired t)
-(setq indo-enable-flex-matching t)
-(setq ido-everywhere t)
-
-;; To show Buffer list in meaningful way
-(defalias 'list-buffers 'ibuffer-other-window)
-
-;; Theme Setting.
-(require 'solarized-dark-theme)
-
-
-;---------------------------------------------------------------------
-;Multiple Cursor changes
-;---------------------------------------------------------------------
-
-(global-set-key (kbd "C-c m c") 'mc/edit-lines)
-
-;; working with multiple cursor
-(require 'mc-edit-lines)
-(require 'mc-cycle-cursors)
-(require 'mc-mark-more)
-(require 'mc-mark-pop)
-(require 'rectangular-region-mode)
-(require 'mc-separate-operations)
-(require 'mc-hide-unmatched-lines-mode)
-
-(provide 'multiple-cursors)
-
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
+(use-package smartparens
+    :ensure t
+    :diminish smartparens-mode
+    :config
+    (add-hook 'prog-mode-hook 'smartparens-mode))
+    
 
 ;-------------------------------------------------------
-; Python Setting
+;Counsel and Swiper and ivy and avy
 ;-------------------------------------------------------
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+(use-package avy
+  :bind
+  ("C-:" . avy-goto-char-timer))
 
-;Enable elpy Packages
-(elpy-enable)
+(use-package ace-link
+  :config
+  (ace-link-setup-default))
 
-(put 'upcase-region 'disabled nil)
+;-------------------------------------------------------
+;Avy Single go-tochar
+;-------------------------------------------------------
 
-
-;--------------------------------------------------------------------
-; Avy/Counsel/Swiper - For search in buffer or file
-;--------------------------------------------------------------------
-
-(use-package counsel
+(use-package avy
   :ensure t
-  )
+ :bind ("M-s" . avy-goto-char))
 
-(use-package swiper
-:ensure try
-:config
-(progn
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-load-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-))
+(use-package avy-flycheck
+  :bind
+  ("C-c '" . avy-flycheck-goto-error))
+
+(use-package goto-chg
+  :bind
+  ("C-c G" . goto-last-change))
+
 
 ;; flx configuration fuzzy search
 
@@ -424,7 +340,308 @@
                                         (interactive)
                                         (kill-line 0)
                                         (indent-according-to-mode)))
+					
 
+;--------------------------------------------------------------------
+; ivy/Counsel/Swiper - For search in buffer or file
+;--------------------------------------------------------------------
+
+;;(use-package ivy
+;;      :ensure t
+;;     :diminish ivy-mode
+;;      :config
+;;      (ivy-mode t))
+
+;(setq ivy-initial-inputs-alist nil)
+
+;; ;;Counsel
+;;  (use-package counsel
+;;     :ensure t
+;;     )
+
+;; Swiper configuration for instead of CRTL-S
+;; (use-package swiper
+;;           :ensure t
+;;           :config
+;;           (progn
+;; (ivy-mode 1)
+;; (setq ivy-use-virtual-buffers t)
+;; (setq enable-recursive-minibuffers t)
+;; ;; enable this if you want `swiper' to use it
+;; ;; (setq search-default-mode #'char-fold-to-regexp)
+;;      (global-set-key "\C-s" 'swiper)
+;;      (global-set-key (kbd "C-c C-r") 'ivy-resume)
+;;      (global-set-key (kbd "<f6>") 'ivy-resume)
+;;      (global-set-key (kbd "M-x") 'counsel-M-x)
+;;      (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+;;      (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+;;      (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+;;      (global-set-key (kbd "<f1> l") 'counsel-find-library)
+;;      (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+;;      (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;;      (global-set-key (kbd "C-c g") 'counsel-git)
+;;      (global-set-key (kbd "C-c j") 'counsel-git-grep)
+;;      (global-set-key (kbd "C-c k") 'counsel-ag)
+;;      (global-set-key (kbd "C-x l") 'counsel-locate)
+;;      (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+;;      (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+;;  ))
+
+;-------------------------------------------------------
+;; Helm Set up
+;-------------------------------------------------------
+(require 'helm-config)
+
+(use-package helm
+  :init
+  (setq helm-split-window-default-side 'other)
+  (helm-mode 1)
+  :config
+  (define-key helm-find-files-map
+    (kbd "<backtab>") #'helm-select-action)
+  (define-key helm-find-files-map
+    (kbd "C-i")  #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  :bind
+  (("M-x" . helm-M-x)
+   ("M-y" . helm-show-kill-ring)
+   ("C-x C-f" . helm-find-files)
+   ("C-c o" . helm-occur)
+   ("C-x b" . helm-mini)
+   ("C-x r b" . helm-bookmarks)
+   ("C-h a" . helm-apropos)
+   ("C-h d" . helm-info-at-point)
+   ("C-c l" . helm-locate)
+   ("C-c r" . helm-resume)
+   ("C-c i" . helm-imenu)))
+
+;-------------------------------------------------------
+;;Like a Swaper Increment search pattern.
+;-------------------------------------------------------
+(use-package helm-swoop 
+  :bind 
+  (("C-s" . helm-swoop-without-pre-input)
+   ("C-S-s" . helm-swoop)))
+
+(use-package helm-descbinds
+  :init 
+  (helm-descbinds-mode))
+
+(use-package helm-git-grep
+  :bind
+  (("C-c j" . helm-git-grep)
+   ("C-c J" . helm-git-grep-at-point)))
+
+(use-package helm-ls-git
+  :bind
+  (("C-c g" . helm-ls-git-ls)))
+
+;; (use-package helm-make
+;;   :bind
+;;   (("C-c K" . helm-make)))
+
+(use-package helm-c-yasnippet
+  :bind
+  (("C-c y" . helm-yas-complete)))
+
+;; (use-package helm-mt
+;;   :bind (("C-c S" . helm-mt)))
+
+
+(setq helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match    t)
+
+(when (executable-find "ack-grep")
+  (setq helm-grep-default-command "ack-grep -Hn --color --smart-case  --no-group  %e %p %f"
+        helm-grep-default-recurse-command "ack-grep -H --no-group --color  %e %p %f"))
+
+;;(add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+
+;-------------------------------------------------------
+;; Convenience functions, aliases, and key bindings
+;-------------------------------------------------------
+
+;; Convenience functions and aliase
+
+(defun am ()
+  "Change dictionary to american."
+  (interactive)
+  (setq ispell-local-dictionary "american"))
+
+(defun pl ()
+  "Change dictionary to polish."
+  (interactive)
+  (setq ispell-local-dictionary "polish"))
+
+(defalias 'st #'magit-status)
+(defalias 'ir #'ispell-region)
+(defalias 'md #'markdown-mode)
+
+;-------------------------------------------------------
+;; Bind keys
+;-------------------------------------------------------
+
+(global-set-key "\C-ck" #'compile)
+(global-set-key "\C-cq" #'bury-buffer)
+
+
+;--------------------------------------------------------------
+; Go Programming Setting
+;--------------------------------------------------------------
+
+(setenv "GOPATH" "/home/satish/codebase/gocode/")
+(add-to-list 'exec-path "/home/satish/codebase/gocode/bin")
+
+(defun my-go-electric-brace ()
+  "Insert an opening brace may be with the closing one.
+If there is a space before the brace also adds new line with
+properly indented closing brace and moves cursor to another line
+inserted between the braces between the braces."
+  (interactive)
+  (if (not (looking-back " "))
+      (insert "{")
+    (insert "{")
+    (newline)
+    (indent-according-to-mode)
+    (save-excursion
+      (newline)
+      (insert "}")
+      (indent-according-to-mode))))
+
+(defun my-go-mode-hook ()
+          ;use goimports instead of go-fmt
+          (setq gofmt-command "goimports")
+
+          ; Call Gofmt before saving
+          (add-hook 'before-save-hook 'gofmt-before-save)
+
+          ; eldoc shows the signature of the function at point in the status bar.
+          (go-eldoc-setup)
+
+           ;Autocomplete
+          (auto-complete-mode 1)
+
+          ;; guru settings
+          (go-guru-hl-identifier-mode)                    ; highlight identifiers
+
+        ; Godef jump key binding
+        (local-set-key (kbd "M-.") 'godef-jump)
+        (local-set-key (kbd "M-*") 'pop-tag-mark)
+        (local-set-key (kbd "M-p") 'compile)            ; Invoke compiler
+        (local-set-key (kbd "M-P") 'recompile)          ; Redo most recent compile cmd
+        (local-set-key (kbd "M-[") 'previous-error)     ; Go to previous error or msg
+        (local-set-key (kbd "M-]") 'next-error)         ; Go to next error (or msg)
+; Customize compile command to run go build
+(if (not (string-match "go" compile-command))
+     (set (make-local-variable 'compile-command)
+          "go build -v && go test -v && go vet"))
+  let ((map go-mode-map))
+        (define-key map (kbd "C-c a") 'go-test-current-project) ;; current package, really
+        (define-key map (kbd "C-c m") 'go-test-current-file)
+        (define-key map (kbd "C-c .") 'go-test-current-test)
+        (define-key map (kbd "C-c b") 'go-run)
+
+)
+
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+
+(require 'auto-complete-config)
+
+(with-eval-after-load 'go-mode
+   (require 'go-autocomplete))
+
+
+;;C-c C-o d #for describe
+
+------------------------------------------------------
+;Guru commands
+;------------------------------------------------------
+;    j jump to definition
+;    r referrers
+;    f free names (== if a selected block is turned into a function, what params are needed?)
+;    d describe expression (== show function params or type of identifier)
+;    i show implements (== what interfaces does this thing implement?)
+;    < show callers to a function
+;   > show callees to a function
+;    s show call stack (== possible paths from main())
+;    p show points-to
+;    e show which errors
+;    c show channel peers
+
+
+(require 'go-guru)
+(go-guru-hl-identifier-mode)
+
+;; Go/speedbar integration
+
+(use-package go-mode
+  :config (use-package godoctor))
+
+;; go lint
+
+
+;-------------------------------------------------------
+;  Shell mode
+;-------------------------------------------------------
+(require 'ansi-color)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+(defun my-shell-setup ()
+  (setq comint-scroll-show-maximum-output 'this)
+  (setq comint-completion-addsuffix       t)
+  (setq comint-eol-on-send                t)
+  (setq w32-quote-process-args            ?\")
+
+  (make-variable-buffer-local   'comint-completion-addsuffix)
+  (local-set-key '[up]          'comint-previous-input)
+  (local-set-key '[down]        'comint-next-input)
+  (local-set-key '[(shift tab)] 'comint-next-matching-input-from-input)
+)
+(setq shell-mode-hook 'my-shell-setup)
+(setq process-coding-system-alist (cons '("bash" . raw-text-unix)
+                                        process-coding-system-alist))
+
+;-------------------------------------------------------------------
+;; Cygwin Configurations changes
+;-------------------------------------------------------------------
+;;(require 'setup-cygwin)
+;; Sets your shell to use cygwin's bash, if Emacs finds it's running
+;; under Windows and c:\cygwin exists. Assumes that C:\cygwin\bin is
+;; not already in your Windows Path (it generally should not be).
+
+;;(let* ((cygwin-root "C:/cygwin64")
+;;        (cygwin-bin (concat cygwin-root "/bin")))
+;;  (when (and (eq 'windows-nt system-type)
+;;  	     (file-readable-p cygwin-root))
+
+;;    (setq exec-path (cons cygwin-bin exec-path))
+;;    (setenv "PATH" (concat cygwin-bin ";" (getenv "PATH")))
+
+;; By default use the Windows HOME.
+;; Otherwise, uncomment below to set a HOME
+;(setenv "HOME" (concat cygwin-root "C:/home/"))
+
+;; NT-emacs assumes a Windows shell. Change to bash.
+
+;;(setq shell-file-name "bash")
+;;(setenv "SHELL" shell-file-name)
+;;(setq explicit-shell-file-name shell-file-name)
+;(setq explicit-shell-file-name "C:/cygwin64/bin/bash.exe")
+
+ ;; This removes unsightly ^M characters that would otherwise
+ ;; appear in the output of java applications.
+ (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)))
+
+;-------------------------------------------------------
+; Python Setting
+;-------------------------------------------------------
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
+;Enable elpy Packages
+(elpy-enable)
+
+(put 'upcase-region 'disabled nil)
 
 ;------------------------------------------------------------------------
 ; org-mode
