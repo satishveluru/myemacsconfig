@@ -9,6 +9,12 @@
 (setenv "SITELISP_HOME" "~/site-lisp")
 (add-to-list 'load-path (getenv "SITELISP_HOME"))
 
+;-------------------------------------------------------
+;(setenv "SITELISP_HOME" "/home/satish/.emacs.d/elpa/")
+;(add-to-list 'load-path (getenv "SITELISP_HOME"))
+;(add-to-list 'load-path "~/.emacs.d/elpa/")
+;--------------------------------------------------------
+
 ;---------------------------------------------------------------------
 ; shell  Command to run Bash. Usage: M-x run-bash
 ;---------------------------------------------------------------------
@@ -25,9 +31,6 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
-
-
-
 ;---------------------------------------------------------------------
 ; Environemnt Variables
 ;---------------------------------------------------------------------
@@ -40,38 +43,40 @@
    (getenv "PATH")
   ))
 
-
-
 ;-------------------------------------------------------
 ;  Show date and time in mode line
 ;-------------------------------------------------------
-
 (setq display-time-day-and-date t)
 (display-time)
-
-
-;--------------------------------------------------------------
 
 ;-------------------------------------------------------
 ;  No welcome buffer Remove Menu toool bar and scroll bar
 ;-------------------------------------------------------
 (setq inhibit-startup-screen t)
 (tool-bar-mode -1)
-
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;-------------------------------------------------------
 ; Word Wrap
 ;-------------------------------------------------------
-
 (setq word-wrap t)
-(setq org-startup-indented t)
+(setq org-startup-indented t);Cursor Color and mouse color
+(set-cursor-color     "orange")
+(set-mouse-color      "#bf3eff")
+(setq initial-scratch-message "")
+
+;-------------------------------------------------------
+; To move one screen to Other Using Shift arrow key command.
+;-------------------------------------------------------
+(windmove-default-keybindings 'shift)
 
 ;-------------------------------------------------------
 ; Delete Trailing whitspace ; M-SPC Just Once space ; M-\ delete Horizontal Space
 ;--------------------------------------------------------
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'before-save-lines 'delete-trailing-lines)
-
 
 ;-------------------------------------------------------
 ; Auto Completion
@@ -80,7 +85,6 @@
 ;-------------------------------------------------------
 ; Create Empty Bufffer 
 ;-------------------------------------------------------
-
 (defun create-new-buffer ()
   (interactive)
   (let (($buf (generate-new-buffer "untitled")))
@@ -89,7 +93,6 @@
     (setq buffer-offer-save t)))
 
 (global-set-key (kbd "C-c n") #'create-new-buffer)	
-
 
 ;-------------------------------------------------------
 ; Multi Scratch
@@ -105,6 +108,22 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 
+;------------------------------------------------------
+; To search files or directories it will be useful
+;-------------------------------------------------------
+;(ido-mode t)
+;(setq ido-show-dot-for-dired t)
+;(setq indo-enable-flex-matching t)
+;(setq ido-everywhere t)
+
+;Note: we are using HELM instead of ido -mode
+
+;------------------------------------------------------
+;To show Buffer list in meaningful way
+;------------------------------------------------------
+(defalias 'list-buffers 'ibuffer-other-window)
+
+
 ;-------------------------------------------------------
 ; Proxy Setting
 ;-------------------------------------------------------
@@ -115,9 +134,6 @@
 		("http"     . "localhost:3128")
 		("https"    . "localhost:3128")
 		))
-
-
-
 
 ;-------------------------------------------------------
 ; Package management
@@ -134,23 +150,70 @@
 (add-to-list 'package-archives '("elpy" 	 . "https://jorgenschaefer.github.io/packages/"))
 
 (package-initialize)
+(package-refresh-contents) ;;; should be after pkg initialize
+(add-to-list 'load-path "~/.emacs.d/elpa/")
 
-;; Bootstrap 'use-package'
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
+  
+;; Bootstrap 'use-package' to install other package
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+ (package-refresh-contents)
+(package-install 'use-package))
 
+;-------------------------------------------------------
 ;; Install Try Package
+;-------------------------------------------------------
 (use-package try
   :ensure t)
-
-;;Install which-key Package
+  
+;-------------------------------------------------------
+;;Install which-key Package  navigating emacs usage -CTRL-x
+;-------------------------------------------------------
 (use-package which-key
-  :ensure t)
+  :ensure t
+  :config (which-key-mode))
 
+;-------------------------------------------------------
 ;; Refresh Packages
+;-------------------------------------------------------
 (when (not package-archive-contents)
-    (package-refresh-contents))
+(package-refresh-contents))
+
+;-------------------------------------------------------
+;;Theme
+;-------------------------------------------------------
+
+;(require 'solarized-dark-theme)
+(require 'color-theme-sanityinc-tomorrow)
+
+;------------------------------------------------------
+;Editing Enhancements & Edit with multiple cursors
+;-------------------------------------------------------
+
+(use-package multiple-cursors
+  :bind
+  (("C-c n" . mc/mark-next-like-this)
+   ("C-c p" . mc/mark-previous-like-this)))
+
+;------------------------------------------------------
+;Fix trailing spaces but only in modified lines
+;------------------------------------------------------
+(use-package ws-butlerq
+  :defer
+  :init
+  (add-hook 'prog-mode-hook #'ws-butler-mode))
+
+(use-package shell-pop
+  :init
+  (setq shell-pop-full-span t)
+  :bind (("C-c s" . shell-pop)))
+
+;; (use-package magit
+;;   :bind ("C-c m" . magit-status))
+
+
 
 ;-------------------------------------------------------
 ;Custom Setting
