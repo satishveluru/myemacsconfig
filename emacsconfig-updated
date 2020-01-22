@@ -134,6 +134,8 @@
 ;Multiple Cursor changes
 ;---------------------------------------------------------------------
 
+(require 'multiple-cursors)
+
 (global-set-key (kbd "C-c m c") 'mc/edit-lines)
 
 ;; working with multiple cursor
