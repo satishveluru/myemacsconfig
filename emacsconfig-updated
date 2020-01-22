@@ -125,9 +125,11 @@
 
 ;---------------------------------------------------------------------
 ;; Theme Setting.
+;; Some time solarized theme with require is not working , so i used
+;; M-x Package-install solarized-theme and used below command 
 ;---------------------------------------------------------------------
-(require 'solarized-dark-theme)
-
+;(require 'solarized-dark-theme)
+(load-theme 'solarized-dark t)
 
 ;---------------------------------------------------------------------
 ;Multiple Cursor changes
