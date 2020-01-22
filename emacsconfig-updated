@@ -9,16 +9,14 @@
 (setq package-check-signature nil)
 
 ;---------------------------------------------------------------------
-;  Locate our e-lisp...
+;  Locate our e-lisp themes and package folders 
 ;---------------------------------------------------------------------
 
-(setenv "SITELISP_HOME" "~/site-lisp")
-(add-to-list 'load-path (getenv "SITELISP_HOME"))
-
 ;-------------------------------------------------------
-;(setenv "SITELISP_HOME" "/home/satish/.emacs.d/elpa/")
-;(add-to-list 'load-path (getenv "SITELISP_HOME"))
-;(add-to-list 'load-path "~/.emacs.d/elpa/")
+(setenv "SITELISP_HOME" "~/.emacs.d/elpa/")
+(add-to-list 'load-path (getenv "SITELISP_HOME"))
+(add-to-list 'load-path "~/.emacs.d/elpa/")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 ;--------------------------------------------------------
 
 ;---------------------------------------------------------------------
@@ -126,7 +124,8 @@
 ;---------------------------------------------------------------------
 ;; Theme Setting.
 ;; Some time solarized theme with require is not working , so i used
-;; M-x Package-install solarized-theme and used below command 
+;; 1.M-x Package-install solarized-theme and used below command : (load-theme 'solarized-dark t)
+;; 2. After adding custom them load path , declare (load-theme 'solarized-dark t)
 ;---------------------------------------------------------------------
 ;(require 'solarized-dark-theme)
 (load-theme 'solarized-dark t)
